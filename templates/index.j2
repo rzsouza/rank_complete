@@ -14,26 +14,22 @@
                 <div class="col">
                     <h1 class="text-center">Ranking Complete</h1>
                     <table class="table table-hover">
-                        <tr>
-                            <th>#</th>
-                            <th>Team</th>
-                            <th>Points</th>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>Argentina</td>
-                            <td>9</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>France</td>
-                            <td>4</td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>Brazil</td>
-                            <td>1</td>
-                        </tr>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Team</th>
+                                <th>Points</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for team in ranking %}
+                                <tr>
+                                    <th scope="row">{{ team.position }}</th>
+                                    <td>{{ team.name }}</td>
+                                    <td>{{ team.points }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
                     </table>
                 </div>
             </div>
