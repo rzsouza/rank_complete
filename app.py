@@ -13,6 +13,10 @@ def index():
     ]
     return render_template('index.j2', ranking=ranking)
 
+@app.route('/admin')
+def admin():
+    return render_template('admin.j2')
+
 
 if __name__ == '__main__':
     app.run()
