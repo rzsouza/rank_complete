@@ -1,4 +1,8 @@
+from datetime import datetime
+
 from flask import Flask, render_template, request
+
+from match import Match
 
 app = Flask(__name__)
 
@@ -9,7 +13,7 @@ ranking = [
     {'position': 4, 'name': 'Germany', 'points': 1},
 ]
 
-matchs = []
+matches: list[Match] = []
 
 
 @app.route('/')
@@ -25,10 +29,12 @@ def admin():
 @app.route('/match', methods=['POST'])
 def add_match():
     home_team = request.form['home_team']
-    home_team_score = request.form['home_team_score']
+    home_team_score = int(request.form['home_team_score'])
     away_team = request.form['away_team']
-    away_team_team_score = request.form['away_team_score']
-    return f"{home_team} {home_team_score} X {away_team} {away_team_team_score}"
+    away_team_team_score = int(request.form['away_team_score'])
+    date = datetime.now()
+    matches.append(Match(home_team, home_team_score, away_team, away_team_team_score, date))
+    return f"{matches}"
 
 
 if __name__ == '__main__':
