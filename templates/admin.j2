@@ -13,18 +13,18 @@
 <body>
 <div class="container">
     <div class="row"><h2>New Match</h2></div>
-    <form class="row">
+    <form class="row" action="/match" method="post">
         <div class="col-12">
             <div class="input-group">
                 <label class="visually-hidden" for="home_team" >Home Team</label>
-                <input id="home_team" type="text" placeholder="Home Team" class="col-3">
+                <input id="home_team" name="home_team" type="text" placeholder="Home Team" class="col-3">
                 <label class="visually-hidden" for="home_team_score">Home Team Score</label>
-                <input id="home_team_score" type="number" value="0" class="col-1" style="max-width: 50px">
+                <input id="home_team_score" name="home_team_score" type="number" value="0" class="col-1" style="max-width: 50px" min="0">
                 <div class="col-1 text-center" style="max-width: 30px">X</div>
                 <label class="visually-hidden" for="away_team_score">Away Team Score</label>
-                <input id="away_team_score" type="number" value="0" class="col-1" style="max-width: 50px">
+                <input id="away_team_score" name="away_team_score" type="number" value="0" class="col-1" style="max-width: 50px" min="0">
                 <label class="visually-hidden" for="away_team">Away Team</label>
-                <input id="away_team" type="text" placeholder="Away Team" class="col-3">
+                <input id="away_team" name="away_team" type="text" placeholder="Away Team" class="col-3">
                 <div class="col-1" style="max-width: 30px"></div>
                 <button type="submit" class="button button-primary col-3">Add match</button>
             </div>
