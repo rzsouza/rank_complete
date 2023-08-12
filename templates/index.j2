@@ -16,9 +16,9 @@
                     <tbody>
                     {% for team in ranking %}
                         <tr>
-                            <th scope="row">{{ team.position }}</th>
-                            <td>{{ team.name }}</td>
-                            <td>{{ team.points }}</td>
+                            <th scope="row">{{ loop.index }}</th>
+                            <td>{{ team[0] }}</td>
+                            <td>{{ team[1] }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>
