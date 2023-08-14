@@ -13,14 +13,14 @@ points: dict[str, int] = {}
 matches: list[Match] = []
 
 
-@app.route('/')
+@app.route("/")
 def index():
-    return render_template('index.j2', ranking=ranking)
+    return render_template("index.j2", ranking=ranking)
 
 
-@app.route('/admin')
+@app.route("/admin")
 def admin():
-    return render_template('admin.j2')
+    return render_template("admin.j2")
 
 
 def update_ranking(match: Match):
@@ -41,18 +41,18 @@ def update_ranking(match: Match):
     ranking = sorted(points.items(), key=lambda item: item[1], reverse=True)
 
 
-@app.route('/match', methods=['POST'])
+@app.route("/match", methods=["POST"])
 def add_match():
-    home_team = request.form['home_team']
-    home_team_score = int(request.form['home_team_score'])
-    away_team = request.form['away_team']
-    away_team_team_score = int(request.form['away_team_score'])
+    home_team = request.form["home_team"]
+    home_team_score = int(request.form["home_team_score"])
+    away_team = request.form["away_team"]
+    away_team_team_score = int(request.form["away_team_score"])
     date = datetime.now()
     match = Match(home_team, home_team_score, away_team, away_team_team_score, date)
     matches.append(match)
     update_ranking(match)
-    return redirect(url_for('index'))
+    return redirect(url_for("index"))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run()
