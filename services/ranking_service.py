@@ -2,11 +2,10 @@ from match import Match
 
 
 class RankingService:
-    _ranking = []
-
-    points: dict[str, int] = {}
-
-    matches: list[Match] = []
+    def __init__(self) -> None:
+        self._ranking = []
+        self._points: dict[str, int] = {}
+        self._matches: list[Match] = []
 
     def _update_ranking(self, match: Match):
         home_points = 1
@@ -19,16 +18,20 @@ class RankingService:
             home_points = 0
             away_points = 3
 
-        self.points[match.home_team] = self.points.get(match.home_team, 0) + home_points
-        self.points[match.away_team] = self.points.get(match.away_team, 0) + away_points
+        self._points[match.home_team] = (
+            self._points.get(match.home_team, 0) + home_points
+        )
+        self._points[match.away_team] = (
+            self._points.get(match.away_team, 0) + away_points
+        )
 
         self._ranking = sorted(
-            self.points.items(), key=lambda item: item[1], reverse=True
+            self._points.items(), key=lambda item: item[1], reverse=True
         )
 
     def ranking(self):
         return self._ranking
 
     def add_match(self, match: Match):
-        self.matches.append(match)
+        self._matches.append(match)
         self._update_ranking(match)
