@@ -1,13 +1,16 @@
-from match import Match
+from typing import List
+
+from models.match import Match
+from models.ranking_line import RankingStats
 
 
 class RankingService:
     def __init__(self) -> None:
-        self._ranking = []
+        self._ranking: List[RankingStats] = []
         self._points: dict[str, int] = {}
-        self._matches: list[Match] = []
+        self._matches: List[Match] = []
 
-    def _update_ranking(self, match: Match):
+    def _update_ranking(self, match: Match) -> None:
         home_points = 1
         away_points = 1
 
@@ -25,13 +28,18 @@ class RankingService:
             self._points.get(match.away_team, 0) + away_points
         )
 
-        self._ranking = sorted(
+        sorted_by_points = sorted(
             self._points.items(), key=lambda item: item[1], reverse=True
         )
 
-    def ranking(self):
+        self._ranking = list(
+            map(lambda item: RankingStats(item[0], item[1]), sorted_by_points)
+        )
+
+    def ranking(self) -> List[RankingStats]:
         return self._ranking
 
-    def add_match(self, match: Match):
+    def add_match(self, match: Match) -> List[RankingStats]:
         self._matches.append(match)
         self._update_ranking(match)
+        return self._ranking

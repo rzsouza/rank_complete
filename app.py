@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 
-from match import Match
+from models.match import Match
 from services.ranking_service import RankingService
 
 app = Flask(__name__)

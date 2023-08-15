@@ -1,47 +1,59 @@
-from typing import List, Tuple
+from typing import List
 from unittest import TestCase
 
-from match import Match
+from models.match import Match
+from models.ranking_line import RankingStats
 from services.ranking_service import RankingService
 
 
 class TestRankingService(TestCase):
     def test_ranking_starts_with_empty_ranking(self):
-        service = RankingService()
-        self.assert_ranks_match_expected([], service.ranking())
+        self.assert_ranks_match_expected([], [])
 
     def test_draw_should_have_teams_with_one_point(self):
-        service = RankingService()
-        match = Match("Brazil", 0, "Argentina", 0)
-        service.add_match(match)
+        matches = [Match("Brazil", 0, "Argentina", 0)]
 
-        expected_ranking = [("Brazil", 1), ("Argentina", 1)]
+        expected_ranking = [
+            RankingStats("Brazil", 1),
+            RankingStats("Argentina", 1),
+        ]
 
-        self.assert_ranks_match_expected(expected_ranking, service.ranking())
+        self.assert_ranks_match_expected(expected_ranking, matches)
 
     def test_win_should_have_teams_with_3_and_0_points(self):
-        service = RankingService()
-        match = Match("Italy", 2, "Germany", 0)
-        service.add_match(match)
+        matches = [Match("Italy", 2, "Germany", 0)]
+        expected_ranking = [
+            RankingStats("Italy", 3),
+            RankingStats("Germany", 0),
+        ]
 
-        expected_ranking = [("Italy", 3), ("Germany", 0)]
-
-        self.assert_ranks_match_expected(expected_ranking, service.ranking())
+        self.assert_ranks_match_expected(expected_ranking, matches)
 
     def test_same_team_plays_twice_appears_only_once_in_ranking(self):
-        service = RankingService()
-        service.add_match(Match("Italy", 2, "Germany", 0))
-        service.add_match(Match("Italy", 1, "France", 1))
+        matches = [
+            Match("Italy", 2, "Germany", 0),
+            Match("Italy", 1, "France", 1),
+        ]
 
-        expected_ranking = [("Italy", 4), ("France", 1), ("Germany", 0)]
+        expected_ranking = [
+            RankingStats("Italy", 4),
+            RankingStats("France", 1),
+            RankingStats("Germany", 0),
+        ]
 
-        self.assert_ranks_match_expected(expected_ranking, service.ranking())
+        self.assert_ranks_match_expected(expected_ranking, matches)
 
     def assert_ranks_match_expected(
         self,
-        expected_ranking: List[Tuple],
-        ranking: List[Tuple],
+        expected_ranking: List[RankingStats],
+        matches: List[Match],
     ):
+        service = RankingService()
+
+        ranking = []
+        for match in matches:
+            ranking = service.add_match(match)
+
         self.assertEqual(len(expected_ranking), len(ranking), "should have same length")
 
         for index, line in enumerate(ranking):
