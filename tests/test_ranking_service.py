@@ -28,6 +28,15 @@ class TestRankingService(TestCase):
 
         self.assert_ranks_match_expected(expected_ranking, service.ranking())
 
+    def test_same_team_plays_twice_appears_only_once_in_ranking(self):
+        service = RankingService()
+        service.add_match(Match("Italy", 2, "Germany", 0))
+        service.add_match(Match("Italy", 1, "France", 1))
+
+        expected_ranking = [("Italy", 4), ("France", 1), ("Germany", 0)]
+
+        self.assert_ranks_match_expected(expected_ranking, service.ranking())
+
     def assert_ranks_match_expected(
         self,
         expected_ranking: List[Tuple],
