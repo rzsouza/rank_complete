@@ -10,7 +10,7 @@ ranking_service = RankingService()
 
 @app.route("/")
 def index():
-    return render_template("index.j2", ranking=ranking_service.ranking)
+    return render_template("index.j2", ranking=ranking_service.ranking())
 
 
 @app.route("/admin")
