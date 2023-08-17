@@ -2,7 +2,7 @@ from typing import List
 from unittest import TestCase
 
 from models.match import Match
-from models.ranking_line import RankingStats
+from models.ranking_stats import RankingStats
 from services.ranking_service import RankingService
 
 
@@ -14,8 +14,8 @@ class TestRankingService(TestCase):
         matches = [Match("Brazil", 0, "Argentina", 0)]
 
         expected_ranking = [
-            RankingStats("Brazil", 1),
-            RankingStats("Argentina", 1),
+            RankingStats("Brazil", 0, 1),
+            RankingStats("Argentina", 0, 1),
         ]
 
         self.assert_ranks_match_expected(expected_ranking, matches)
@@ -23,8 +23,8 @@ class TestRankingService(TestCase):
     def test_win_should_have_teams_with_3_and_0_points(self):
         matches = [Match("Italy", 2, "Germany", 0)]
         expected_ranking = [
-            RankingStats("Italy", 3),
-            RankingStats("Germany", 0),
+            RankingStats("Italy", 0, 3),
+            RankingStats("Germany", 0, 0),
         ]
 
         self.assert_ranks_match_expected(expected_ranking, matches)
@@ -36,9 +36,9 @@ class TestRankingService(TestCase):
         ]
 
         expected_ranking = [
-            RankingStats("Italy", 4),
-            RankingStats("France", 1),
-            RankingStats("Germany", 0),
+            RankingStats("Italy", 0, 4),
+            RankingStats("France", 3, 1),
+            RankingStats("Germany", 0, 0),
         ]
 
         self.assert_ranks_match_expected(expected_ranking, matches)
