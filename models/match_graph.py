@@ -18,6 +18,7 @@ def _calculate_match_points(match: Match) -> tuple[int, int]:
 
 def calculate_points(team: str, team_map) -> RankingStats:
     real_points = 0
+    unknown_points = 0
     team_matches = team_map[team]
     for other_team in team_map.keys():
         if other_team in team_matches.keys():
@@ -27,8 +28,10 @@ def calculate_points(team: str, team_map) -> RankingStats:
                 home_team_points if team == match.home_team else away_team_points
             )
             real_points += team_points
+        elif other_team != team:
+            unknown_points += 1
 
-    return RankingStats(team, 0, 0, real_points)
+    return RankingStats(team, unknown_points, 0, real_points)
 
 
 def _sort_graph(graph: dict[str, RankingStats]) -> Ranking:

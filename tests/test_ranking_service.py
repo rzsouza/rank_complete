@@ -37,8 +37,8 @@ class TestRankingService(TestCase):
 
         expected_ranking = [
             RankingStats("Italy", 0, 0, 4),
-            RankingStats("France", 0, 0, 1),
-            RankingStats("Germany", 0, 0, 0),
+            RankingStats("France", 1, 0, 1),
+            RankingStats("Germany", 1, 0, 0),
         ]
 
         self.assert_ranks_match_expected(expected_ranking, matches)
