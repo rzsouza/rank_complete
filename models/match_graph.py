@@ -34,7 +34,7 @@ def calculate_points(team: str, team_map) -> RankingStats:
 def _sort_graph(graph: dict[str, RankingStats]) -> Ranking:
     return sorted(
         list(graph.values()),
-        key=lambda stats: (-stats.total_points(), -stats.real_points, stats.name),
+        key=lambda stats: (-stats.total_points, -stats.real_points, stats.name),
     )
 
 
