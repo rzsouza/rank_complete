@@ -4,6 +4,7 @@ from dataclasses import dataclass
 @dataclass
 class RankingStats:
     name: str
+    unknown_points: int
     transitive_points: int
     real_points: int
 

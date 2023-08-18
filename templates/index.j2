@@ -10,6 +10,7 @@
                     <tr>
                         <th>#</th>
                         <th>Team</th>
+                        <th>Unknown Points</th>
                         <th>Transitive Points</th>
                         <th>Real Points</th>
                         <th>Total Points</th>
@@ -20,6 +21,7 @@
                         <tr>
                             <th scope="row">{{ loop.index }}</th>
                             <td>{{ team.name }}</td>
+                            <td>{{ team.unknown_points }}</td>
                             <td>{{ team.transitive_points }}</td>
                             <td>{{ team.real_points }}</td>
                             <td>{{ team.total_points }}</td>

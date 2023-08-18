@@ -28,7 +28,7 @@ def calculate_points(team: str, team_map) -> RankingStats:
             )
             real_points += team_points
 
-    return RankingStats(team, 0, real_points)
+    return RankingStats(team, 0, 0, real_points)
 
 
 def _sort_graph(graph: dict[str, RankingStats]) -> Ranking:
