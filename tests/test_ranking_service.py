@@ -43,6 +43,21 @@ class TestRankingService(TestCase):
 
         self.assert_ranks_match_expected(expected_ranking, matches)
 
+    def test_teams_in_different_graphs_should_generate_unknown_points(self):
+        matches = [
+            Match("Italy", 2, "Germany", 0),
+            Match("Brazil", 1, "France", 1),
+        ]
+
+        expected_ranking = [
+            RankingStats("Italy", 2, 0, 3),
+            RankingStats("Brazil", 2, 0, 1),
+            RankingStats("France", 2, 0, 1),
+            RankingStats("Germany", 2, 0, 0),
+        ]
+
+        self.assert_ranks_match_expected(expected_ranking, matches)
+
     def assert_ranks_match_expected(
         self,
         expected_ranking: List[RankingStats],
