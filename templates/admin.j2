@@ -6,7 +6,7 @@
             <div class="col-12">
                 <div class="input-group">
                     <label class="visually-hidden" for="home_team">Home Team</label>
-                    <input id="home_team" name="home_team" type="text" placeholder="Home Team" class="col-3", style="margin: 5px;">
+                    <input id="home_team" name="home_team" type="text" placeholder="Home Team" class="col-3" style="margin: 5px;">
                     <label class="visually-hidden" for="home_team_score">Home Team Score</label>
                     <input id="home_team_score" name="home_team_score" type="number" value="0" class="col-1"
                            style="max-width: 50px; margin: 5px;" min="0">
@@ -15,7 +15,7 @@
                     <input id="away_team_score" name="away_team_score" type="number" value="0" class="col-1"
                            style="max-width: 50px; margin: 5px;" min="0">
                     <label class="visually-hidden" for="away_team">Away Team</label>
-                    <input id="away_team" name="away_team" type="text" placeholder="Away Team" class="col-3", style="margin: 5px;">
+                    <input id="away_team" name="away_team" type="text" placeholder="Away Team" class="col-3" style="margin: 5px;">
                     <div class="col-1" style="max-width: 30px"></div>
                     <button type="submit" class="button button-primary col-4">Add match</button>
                 </div>
@@ -26,4 +26,6 @@
             <h2>Matches</h2>
         </div>
     </div>
+    <hr>
+    {% include "index.j2" %}
 {% endblock %}

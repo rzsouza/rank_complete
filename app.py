@@ -15,7 +15,7 @@ def index():
 
 @app.route("/admin")
 def admin():
-    return render_template("admin.j2")
+    return render_template("admin.j2", ranking=ranking_service.ranking())
 
 
 @app.route("/match", methods=["POST"])
@@ -23,7 +23,7 @@ def add_match():
     match = _extract_match()
     ranking_service.add_match(match)
 
-    return redirect(url_for("index"))
+    return redirect(url_for("admin"))
 
 
 def _extract_match():
