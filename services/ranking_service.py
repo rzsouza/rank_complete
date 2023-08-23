@@ -2,39 +2,13 @@ from operator import attrgetter
 from typing import List, TypeAlias
 
 from models.match import Match
-from models.match_graph import MatchGraph, TeamMap
+from models.match_graph import MatchGraph, PointType
 from models.ranking_stats import RankingStats
 
 Ranking: TypeAlias = list[RankingStats]
 
 
-def _calculate_match_points(match: Match) -> tuple[int, int]:
-    if match.home_team_score > match.away_team_score:
-        return 3, 0
-    if match.home_team_score < match.away_team_score:
-        return 0, 3
-    return 1, 1
-
-
-def calculate_points(team: str, team_map) -> RankingStats:
-    real_points = 0
-    unknown_points = 0
-    team_matches = team_map[team]
-    for other_team in team_map.keys():
-        if other_team in team_matches.keys():
-            match = team_matches[other_team]
-            (home_team_points, away_team_points) = _calculate_match_points(match)
-            team_points = (
-                home_team_points if team == match.home_team else away_team_points
-            )
-            real_points += team_points
-        elif other_team != team:
-            unknown_points += 1
-
-    return RankingStats(team, unknown_points, 0, real_points)
-
-
-def _sort_graph(graph: dict[str, RankingStats]) -> Ranking:
+def _sort_ranking(graph: dict[str, RankingStats]) -> Ranking:
     result = sorted(list(graph.values()), key=attrgetter("name"))
     return sorted(
         result,
@@ -47,19 +21,38 @@ class RankingService:
     def __init__(self) -> None:
         self._ranking: Ranking = []
         self._matches: List[Match] = []
+        self._graph = MatchGraph([])
 
-    def _update_ranking(self, team_map: TeamMap):
-        graph: dict[str, RankingStats] = {}
-        for team in team_map.keys():
-            graph[team] = calculate_points(team, team_map)
+    def update_ranking(self):
+        results_by_team: dict[str, RankingStats] = {}
 
-        self._ranking = _sort_graph(graph)
+        for team1 in self._graph.teams:
+            real_points = 0
+            unknown_points = 0
+            transitive_points = 0
+
+            for team2 in self._graph.teams:
+                if team1 == team2:
+                    continue
+
+                result = self._graph.find_result()
+                if result.point_type == PointType.REAL:
+                    real_points += result.points
+                elif result.point_type == PointType.UNKNOWN:
+                    unknown_points += result.points
+                elif result.point_type == PointType.TRANSITIVE:
+                    transitive_points += result.points
+
+            results_by_team[team1] = RankingStats(
+                team1, unknown_points, transitive_points, real_points
+            )
+
+        self._ranking = _sort_ranking(results_by_team)
 
     def ranking(self) -> Ranking:
         return self._ranking
 
-    def add_match(self, match: Match) -> Ranking:
+    def add_match(self, match: Match) -> None:
         self._matches.append(match)
-        graph = MatchGraph(self._matches)
-        self._update_ranking(graph.team_map)
-        return self._ranking
+        self._graph = MatchGraph(self._matches)
+        self.update_ranking()

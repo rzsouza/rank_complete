@@ -29,20 +29,6 @@ class TestRankingService(TestCase):
 
         self.assert_ranks_match_expected(expected_ranking, matches)
 
-    def test_same_team_plays_twice_appears_only_once_in_ranking(self):
-        matches = [
-            Match("Italy", 2, "Germany", 0),
-            Match("Italy", 1, "France", 1),
-        ]
-
-        expected_ranking = [
-            RankingStats("Italy", 0, 0, 4),
-            RankingStats("France", 1, 0, 1),
-            RankingStats("Germany", 1, 0, 0),
-        ]
-
-        self.assert_ranks_match_expected(expected_ranking, matches)
-
     def test_teams_in_different_graphs_should_generate_unknown_points(self):
         matches = [
             Match("Italy", 2, "Germany", 0),
@@ -58,6 +44,20 @@ class TestRankingService(TestCase):
 
         self.assert_ranks_match_expected(expected_ranking, matches)
 
+    def test_transitive_points(self):
+        matches = [
+            Match("Italy", 2, "Germany", 0),
+            Match("Italy", 1, "France", 1),
+        ]
+
+        expected_ranking = [
+            RankingStats("Italy", 0, 0, 4),
+            RankingStats("France", 0, 3, 1),
+            RankingStats("Germany", 0, 0, 0),
+        ]
+
+        self.assert_ranks_match_expected(expected_ranking, matches)
+
     def assert_ranks_match_expected(
         self,
         expected_ranking: List[RankingStats],
@@ -65,10 +65,10 @@ class TestRankingService(TestCase):
     ):
         service = RankingService()
 
-        ranking = []
         for match in matches:
-            ranking = service.add_match(match)
+            service.add_match(match)
 
+        ranking = service.ranking()
         self.assertEqual(len(expected_ranking), len(ranking), "should have same length")
 
         for index, line in enumerate(ranking):
