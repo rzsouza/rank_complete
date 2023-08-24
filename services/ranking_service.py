@@ -35,7 +35,7 @@ class RankingService:
                 if team1 == team2:
                     continue
 
-                result = self._graph.find_result()
+                result = self._graph.find_result(team1, team2)
                 if result.point_type == PointType.REAL:
                     real_points += result.points
                 elif result.point_type == PointType.UNKNOWN:
@@ -49,6 +49,7 @@ class RankingService:
 
         self._ranking = _sort_ranking(results_by_team)
 
+    @property
     def ranking(self) -> Ranking:
         return self._ranking
 

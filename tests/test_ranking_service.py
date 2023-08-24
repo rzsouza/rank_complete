@@ -68,7 +68,7 @@ class TestRankingService(TestCase):
         for match in matches:
             service.add_match(match)
 
-        ranking = service.ranking()
+        ranking = service.ranking
         self.assertEqual(len(expected_ranking), len(ranking), "should have same length")
 
         for index, line in enumerate(ranking):
