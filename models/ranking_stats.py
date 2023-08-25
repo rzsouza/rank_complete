@@ -10,4 +10,4 @@ class RankingStats:
 
     @property
     def total_points(self) -> int:
-        return self.real_points + self.transitive_points
+        return self.real_points + self.transitive_points + self.unknown_points

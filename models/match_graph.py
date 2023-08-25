@@ -56,6 +56,25 @@ def find_path_ending_with_team(game_paths: list[Path], team2: str) -> Path | Non
     return None
 
 
+def find_new_result(
+    current_result: MatchResult, new_result: MatchResult
+) -> tuple[bool, MatchResult | None]:
+    if current_result == MatchResult.DRAW:
+        return True, new_result
+
+    if current_result == MatchResult.WIN:
+        if new_result == MatchResult.LOSS:
+            return False, None
+        else:
+            return True, MatchResult.WIN
+
+    if current_result == MatchResult.LOSS:
+        if new_result == MatchResult.WIN:
+            return False, None
+        else:
+            return True, MatchResult.LOSS
+
+
 class MatchGraph:
     def __init__(self, matches: list[Match]) -> None:
         self._graph: dict[str, dict[str, Edge]] = {}
@@ -107,9 +126,15 @@ class MatchGraph:
             last_team_edges = self._graph[last_team]
             for new_last_team in last_team_edges:
                 if new_last_team not in checked_teams:
-                    new_game_paths.append(
-                        Path(result=MatchResult.DRAW, path=path.path + [new_last_team])
+                    is_transitive_new_result, new_result = find_new_result(
+                        path.result, last_team_edges[new_last_team][last_team]
                     )
+
+                    if is_transitive_new_result:
+                        new_game_paths.append(
+                            Path(result=new_result, path=path.path + [new_last_team])
+                        )
+
                     new_checked_teams.add(new_last_team)
 
         new_checked_teams = new_checked_teams.union(checked_teams)
