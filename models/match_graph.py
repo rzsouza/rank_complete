@@ -26,6 +26,12 @@ class MatchResult(Enum):
     WIN = 3
 
 
+@dataclass
+class Path:
+    result: MatchResult
+    path: list[str]
+
+
 class Edge:
     def __init__(self, match: Match):
         self._edge: dict[str, MatchResult] = {}
@@ -41,6 +47,13 @@ class Edge:
 
     def __getitem__(self, item):
         return self._edge[item]
+
+
+def find_path_ending_with_team(game_paths: list[Path], team2: str) -> Path | None:
+    for path in game_paths:
+        if path.path[-1] == team2:
+            return path
+    return None
 
 
 class MatchGraph:
@@ -62,10 +75,43 @@ class MatchGraph:
     def teams(self) -> list[str]:
         return list(self._graph.keys())
 
-    def find_result(self, team1, team2) -> PointResult:
-        team1_edges = self._graph[team1]
+    def find_result(self, team1: str, team2: str) -> PointResult:
+        checked_teams: set[str] = {team1}
+        game_paths: list[Path] = [Path(result=MatchResult.DRAW, path=[team1])]
 
-        if team2 in team1_edges:
-            return PointResult(team1_edges[team2][team1].value, PointType.REAL)
+        can_expand = True
+        while (find_path_ending_with_team(game_paths, team2) is None) and can_expand:
+            game_paths, checked_teams, can_expand = self.expand_game_paths(
+                game_paths, checked_teams
+            )
 
-        return PointResult(1, PointType.UNKNOWN)
+        path = find_path_ending_with_team(game_paths, team2)
+
+        if path is None:
+            return PointResult(1, PointType.UNKNOWN)
+
+        if len(path.path) <= 2:
+            return PointResult(path.result.value, PointType.REAL)
+        else:
+            return PointResult(path.result.value, PointType.TRANSITIVE)
+
+    def expand_game_paths(
+        self, game_paths: list[Path], checked_teams: set[str]
+    ) -> tuple[list[Path], set[str], bool]:
+        new_checked_teams: set[str] = set()
+        new_game_paths: list[Path] = []
+
+        for path in game_paths:
+            last_team = path.path[-1]
+
+            last_team_edges = self._graph[last_team]
+            for new_last_team in last_team_edges:
+                if new_last_team not in checked_teams:
+                    new_game_paths.append(
+                        Path(result=MatchResult.DRAW, path=path.path + [new_last_team])
+                    )
+                    new_checked_teams.add(new_last_team)
+
+        new_checked_teams = new_checked_teams.union(checked_teams)
+
+        return new_game_paths, new_checked_teams, new_checked_teams != checked_teams
