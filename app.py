@@ -15,7 +15,9 @@ def index():
 
 @app.route("/admin")
 def admin():
-    return render_template("admin.j2", ranking=ranking_service.ranking)
+    return render_template(
+        "admin.j2", ranking=ranking_service.ranking, matches=ranking_service.matches
+    )
 
 
 @app.route("/match", methods=["POST"])

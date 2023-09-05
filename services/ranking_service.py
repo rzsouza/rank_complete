@@ -33,6 +33,10 @@ class RankingService:
         self._matches: List[Match] = []
         self._graph = MatchGraph([])
 
+    @property
+    def matches(self):
+        return self._matches
+
     def update_ranking(self):
         results_by_team: dict[str, RankingStats] = {}
 
